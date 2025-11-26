@@ -292,13 +292,19 @@ class ActionExecutor:
             query_tokens = bm25s.tokenize(params.query, stopwords="en", stemmer=stemmer)
             results, scores = retriever.retrieve(query_tokens, k=params.max_results)
 
-            # Format results
+            # Format results - handle both NumPy arrays (bm25s) and lists (fallback)
             formatted_results = []
-            for i in range(results.shape[1]):
+            # Get the result indices and scores from the 2D structure
+            result_indices = results[0] if isinstance(results, list) else results[0, :]
+            result_scores = scores[0] if isinstance(scores, list) else scores[0, :]
+
+            # Iterate through results
+            num_results = len(result_indices)
+            for i in range(num_results):
                 if i >= len(file_paths):
                     break
-                doc_idx = results[0, i]
-                score = scores[0, i]
+                doc_idx = int(result_indices[i])
+                score = float(result_scores[i])
                 if doc_idx >= len(file_paths):
                     continue
                 file_path = file_paths[doc_idx]
