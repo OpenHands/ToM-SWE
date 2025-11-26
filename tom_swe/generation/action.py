@@ -10,8 +10,40 @@ import json
 import logging
 from typing import Any, Optional, List
 from datetime import datetime
-import bm25s
-import Stemmer
+
+# Try to import BM25 dependencies - fall back to pure Python if unavailable
+# The pure Python implementation (bm25_fallback.py) provides:
+# - Similar API to bm25s for seamless integration
+# - Limited to 10 most recent conversations for performance
+# - Simplified Porter stemming approximation (~80% accuracy)
+# - Standard BM25 ranking algorithm
+# Install with: pip install tom-swe[search] for full bm25s support
+try:
+    import bm25s
+    import Stemmer
+
+    HAS_BM25S = True
+except ImportError:
+    HAS_BM25S = False
+    from tom_swe.generation.bm25_fallback import (
+        BM25 as bm25s_BM25,
+        SimpleStemmer,
+        tokenize_corpus,
+    )
+
+    # Create mock bm25s module for consistent API
+    class _Bm25sFallback:
+        BM25 = bm25s_BM25
+
+        @staticmethod
+        def tokenize(text: Any, **kwargs: Any) -> Any:
+            if isinstance(text, str):
+                return tokenize_corpus([text], **kwargs)[0]
+            else:
+                return tokenize_corpus(text, **kwargs)
+
+    bm25s = _Bm25sFallback()
+
 from tom_swe.generation.dataclass import (
     ActionType,
     ReadFileParams,
@@ -123,6 +155,14 @@ class ActionExecutor:
         limit: int = 50,
     ) -> List[tuple[str, str]]:
         """Get file content by search scope, optionally sorted by date. Returns list of (file_path, content) tuples."""
+        # Limit to 10 conversations when using pure Python BM25
+        if not HAS_BM25S and limit > 10:
+            logger.warning(
+                f"Using pure Python BM25 fallback - limiting search to 10 most recent conversations "
+                f"(requested {limit}). Install with 'pip install tom-swe[search]' for full functionality."
+            )
+            limit = 10
+
         try:
             if search_scope == "cleaned_sessions":
                 files = self.file_store.list(get_cleaned_sessions_dir(self.user_id))
@@ -198,12 +238,29 @@ class ActionExecutor:
             return f"String search error: {str(e)}"
 
     def _action_search_file(self, params: SearchFileParams) -> str:
-        """Search within files using BM25 or string matching."""
+        """
+        Search within files using BM25 or string matching.
+
+        BM25 search uses bm25s library if available (install with tom-swe[search]),
+        otherwise falls back to pure Python implementation with 10-conversation limit.
+
+        Args:
+            params: Search parameters including query, scope, and method
+
+        Returns:
+            Formatted search results with scores and snippets
+        """
         if params.search_method == "string_match":
             return self._string_search(params)
 
         # BM25 search (default)
         try:
+            # Log which implementation is being used
+            if not HAS_BM25S:
+                logger.info(
+                    "Using pure Python BM25 fallback (limited to 10 conversations)"
+                )
+
             # Use consolidated file loading with date sorting
             file_content_pairs = self._get_content_by_scope(
                 params.search_scope, params.latest_first, params.chunk_size, 50
@@ -219,16 +276,20 @@ class ActionExecutor:
             if not corpus:
                 return f"No files found in scope '{params.search_scope}'"
 
-            # Create stemmer and tokenize
-            stemmer = Stemmer.Stemmer("english")
+            # Create stemmer - use appropriate type based on availability
+            if HAS_BM25S:
+                stemmer = Stemmer.Stemmer("english")
+            else:
+                stemmer = SimpleStemmer()
+
             corpus_tokens = bm25s.tokenize(corpus, stopwords="en", stemmer=stemmer)
 
             # Build BM25 index
             retriever = bm25s.BM25()
             retriever.index(corpus_tokens)
 
-            # Search
-            query_tokens = bm25s.tokenize(params.query, stemmer=stemmer)
+            # Search - tokenize query with same parameters
+            query_tokens = bm25s.tokenize(params.query, stopwords="en", stemmer=stemmer)
             results, scores = retriever.retrieve(query_tokens, k=params.max_results)
 
             # Format results

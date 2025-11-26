@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tom-swe"
-version = "1.0.2"
+version = "1.0.3"
 description = "Theory of Mind modeling for Software Engineering assistants"
 authors = [
     {name = "Research Team"}
@@ -43,9 +43,6 @@ dependencies = [
     "tqdm>=4.65.0",
     # Template engine
     "jinja2>=3.0.0",
-    # BM25 search dependencies
-    "bm25s>=0.2.0",
-    "PyStemmer>=2.2.0",
     "tiktoken>=0.8.0",
 ]
 
@@ -77,6 +74,11 @@ dev = [
     # HuggingFace dependencies
     "datasets>=2.0.0",
     "huggingface_hub>=0.0.0",
+]
+
+search = [
+    "bm25s>=0.2.0",
+    "PyStemmer>=2.2.0",
 ]
 
 [tool.hatch.build]
