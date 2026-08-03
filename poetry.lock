@@ -1318,14 +1318,23 @@ referencing = ">=0.31.0"
 
 [[package]]
 name = "litellm"
-version = "1.84.1"
+version = "1.93.0"
 description = "Library to easily interface with LLM API providers"
 optional = false
-python-versions = "<3.14,>=3.10"
+python-versions = "<3.15,>=3.10"
 groups = ["main"]
 files = [
-    {file = "litellm-1.84.1-py3-none-any.whl", hash = "sha256:1f39e2d2d134bc0570577df846a987547efafd3c70765b00a83c456318fcdbe8"},
-    {file = "litellm-1.84.1.tar.gz", hash = "sha256:2d01b146e5206e49d1bccc224d31afc37b41b275823c27184b81afaba90464c3"},
+    {file = "litellm-1.93.0-cp310-cp310-manylinux_2_28_aarch64.whl", hash = "sha256:5d84aead083d3d0619b2d293f8006ebbe75611bbdcef470d659c9e2d131d4454"},
+    {file = "litellm-1.93.0-cp310-cp310-manylinux_2_28_x86_64.whl", hash = "sha256:6b49f653e6205cbc725257da8797277f77065c69865fb3489bc5ed0896b66ee0"},
+    {file = "litellm-1.93.0-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:952029d422c2cec8117b444d66d6de87ac970ecf0b2e1383b02788ef90ba3603"},
+    {file = "litellm-1.93.0-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:460001b7c88c5b6675ad482ae3cecba96e21f890604b4febb1a67807ace1c750"},
+    {file = "litellm-1.93.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:3daf5c5aceb07f5d68871071e0ecdc678caccebadca9143cc00bb76f5a8c54e8"},
+    {file = "litellm-1.93.0-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:0784172435de48f66ef7ad89d421604db1ad0db1321ef7f39dbcfe6b20111417"},
+    {file = "litellm-1.93.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:23b8eea4fb8b3b6ade05e7b6085ec9ca12daffcfb38d033d0bbce9c1d5894da5"},
+    {file = "litellm-1.93.0-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:98c15e84d32e922a821c105308bf9ddae8700de9ed396530bee2cbb1cacf4cbb"},
+    {file = "litellm-1.93.0-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:1a476ebc340c070c982eab15b4673fa63a70f5936935f9f20e4d2acb5f35d23b"},
+    {file = "litellm-1.93.0-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:cd70ccd4ba3ef1a395535c287bce72d30c7d937ecca4290c0db37a00738f7ada"},
+    {file = "litellm-1.93.0.tar.gz", hash = "sha256:140bf215e264c71601bca9c06d2436c5451bb59e1e195ea23fc2d3d87b6929ec"},
 ]
 
 [package.dependencies]
@@ -1343,15 +1352,17 @@ tiktoken = ">=0.8.0,<1.0"
 tokenizers = ">=0.21.0,<1.0"
 
 [package.extras]
-caching = ["diskcache (==5.6.3)"]
-extra-proxy = ["a2a-sdk (==0.3.24)", "azure-identity (==1.25.2)", "azure-keyvault-secrets (==4.10.0)", "google-cloud-iam (==2.19.1)", "google-cloud-kms (==2.24.2)", "prisma (==0.11.0)", "redisvl (==0.4.1) ; python_full_version < \"3.14.0\"", "resend (==2.23.0)"]
-google = ["google-cloud-aiplatform (==1.133.0)"]
+caching = ["diskcache (>=5.6.3,<6.0)"]
+cli = ["pyyaml (>=6.0.3,<7.0)", "requests (>=2.32.0,<3.0)", "rich (>=13.9.4,<14.0)"]
+extra-proxy = ["a2a-sdk (>=1.1.0,<2.0)", "azure-identity (>=1.25.2,<2.0)", "azure-keyvault-secrets (>=4.10.0,<5.0)", "google-cloud-iam (>=2.19.1,<3.0)", "google-cloud-kms (>=2.24.2,<3.0)", "prisma (>=0.11.0,<1.0)", "redisvl (>=0.4.1,<1.0)", "resend (>=2.23.0,<3.0)"]
+google = ["google-cloud-aiplatform (>=1.133.0,<2.0)"]
 grpc = ["grpcio (==1.78.0)"]
-mlflow = ["mlflow (==3.11.1)"]
-proxy = ["apscheduler (==3.11.2)", "azure-identity (==1.25.2)", "azure-storage-blob (==12.28.0)", "backoff (==2.2.1)", "boto3 (==1.43.1)", "cryptography (==46.0.7)", "fastapi (==0.124.4)", "fastapi-sso (==0.19.0)", "gunicorn (==23.0.0)", "litellm-enterprise (==0.1.40)", "litellm-proxy-extras (==0.4.72)", "mcp (==1.26.0)", "orjson (==3.11.6)", "polars (==1.38.1)", "pyjwt (==2.12.0)", "pynacl (==1.6.2)", "pyroscope-io (==0.8.16) ; sys_platform != \"win32\"", "python-multipart (==0.0.27)", "pyyaml (==6.0.3)", "restrictedpython (==8.1)", "rich (==13.9.4)", "rq (==2.7.0)", "soundfile (==0.12.1)", "uvicorn (==0.33.0)", "uvloop (==0.21.0) ; sys_platform != \"win32\"", "websockets (==15.0.1)"]
-proxy-runtime = ["anthropic[vertex] (==0.84.0)", "azure-ai-contentsafety (==1.0.0)", "azure-storage-file-datalake (==12.20.0)", "ddtrace (==2.19.0)", "detect-secrets (==1.5.0)", "google-cloud-aiplatform (==1.133.0)", "google-genai (==1.37.0)", "grpcio (==1.78.0)", "langfuse (==2.59.7)", "llm-sandbox (==0.3.39)", "mangum (==0.17.0)", "opentelemetry-api (==1.28.0)", "opentelemetry-exporter-otlp (==1.28.0)", "opentelemetry-sdk (==1.28.0)", "prometheus-client (==0.20.0)", "pypdf (==6.10.2) ; python_full_version < \"3.14.0\"", "sentry-sdk (==2.21.0)"]
-semantic-router = ["aurelio-sdk (==0.0.19) ; python_full_version < \"3.14.0\"", "semantic-router (==0.1.12) ; python_full_version < \"3.14.0\""]
-utils = ["numpydoc (==1.8.0)"]
+mlflow = ["mlflow (>=3.11.1,<4.0)"]
+proxy = ["apscheduler (>=3.11.2,<4.0)", "azure-identity (>=1.25.2,<2.0)", "azure-storage-blob (>=12.28.0,<13.0)", "backoff (>=2.2.1,<3.0)", "boto3 (>=1.43.1,<2.0)", "cryptography (>=48.0.1,<49.0)", "expression (>=5.6.0,<6.0)", "fastapi (>=0.136.3,<1.0)", "fastapi-sso (>=0.19.0,<1.0)", "granian (>=2.7.4,<3.0)", "gunicorn (>=23.0.0,<24.0)", "litellm-enterprise (==0.1.49)", "litellm-proxy-extras (==0.4.76)", "mcp (>=1.28.1,<2.0)", "orjson (>=3.11.6,<4.0)", "polars (>=1.38.1,<2.0)", "pydantic-settings (>=2.14.1,<3.0)", "pyjwt (>=2.13.0,<3.0)", "pynacl (>=1.6.2,<2.0)", "pyroscope-io (>=0.8.16,<1.0) ; sys_platform != \"win32\"", "python-multipart (>=0.0.27,<1.0)", "pyyaml (>=6.0.3,<7.0)", "restrictedpython (>=8.1,<9.0)", "rich (>=13.9.4,<14.0)", "rq (>=2.7.0,<3.0)", "soundfile (>=0.12.1,<1.0)", "starlette (>=1.0.1,<2.0)", "uvicorn (>=0.33.0,<1.0)", "uvloop (>=0.21.0,<1.0) ; sys_platform != \"win32\"", "websockets (>=15.0.1,<16.0)"]
+proxy-runtime = ["anthropic[vertex] (>=0.84.0,<1.0)", "azure-ai-contentsafety (>=1.0.0,<2.0)", "azure-storage-file-datalake (>=12.20.0,<13.0)", "ddtrace (>=4.8.2,<5.0)", "detect-secrets (>=1.5.0,<2.0)", "google-cloud-aiplatform (>=1.133.0,<2.0)", "google-genai (>=1.37.0,<2.0)", "grpcio (==1.78.0)", "langfuse (>=2.59.7,<3.0)", "llm-sandbox (>=0.3.39,<1.0)", "mangum (>=0.17.0,<1.0)", "opentelemetry-api (==1.28.0)", "opentelemetry-exporter-otlp (==1.28.0)", "opentelemetry-instrumentation-fastapi (==0.49b0)", "opentelemetry-sdk (==1.28.0)", "prometheus-client (>=0.20.0,<1.0)", "pypdf (>=6.12.0,<7.0)", "sentry-sdk (>=2.21.0,<3.0)"]
+semantic-router = ["aurelio-sdk (>=0.0.19,<1.0) ; python_full_version < \"3.14.0\"", "semantic-router (>=0.1.15,<1.0) ; python_full_version < \"3.14.0\""]
+stt-nvidia-riva = ["audioread (>=3.0.1)", "numpy (>=1.26.0)", "nvidia-riva-client (>=2.15.0)", "soundfile (>=0.12.1)"]
+utils = ["numpydoc (>=1.8.0,<2.0)"]
 
 [[package]]
 name = "markdown-it-py"
@@ -3792,4 +3803,4 @@ search = ["PyStemmer", "bm25s"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.14"
-content-hash = "fde6126cf8d27c4f1852cb78d4dc04d9b9812bb8190c357147d65c1369662005"
+content-hash = "c1f46a32c097e3aacc752863f41b79ae5797ee14368854ab0cc83705fe51f063"
